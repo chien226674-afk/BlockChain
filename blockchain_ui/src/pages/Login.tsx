@@ -1,16 +1,42 @@
-import SignupForm from "@/components/SignupForm"
+import LoginForm from "@/components/LoginForm";
+import { Link } from "react-router-dom";
 
 export default function Login() {
-  return <div className="flex justify-center ">
-    <div className="flex-1">
-  <img src="Sign_Up.png"alt="Login" className="w-full max-h-162.5"></img>
-    </div>
-    <div className="flex-1 text-white ml-10">
-      <div className="max-w-92.5 mt-18">
-       <h1 className="text-5xl font-semibold">Create Account</h1>
-       <h2 className="font-medium ">Welcome! Enter Your Details And Start Creating, Collecting And Selling Nfts.</h2>
-        <SignupForm />
+  return (
+    <div className="flex flex-col lg:flex-row min-h-screen">
+      {/* Image */}
+      <div className="hidden lg:flex flex-1">
+        <img
+          src="Sign_Up.png"
+          alt="Login"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* Form */}
+      <div className="flex flex-1 justify-center items-center text-white px-6">
+        <div className="w-full max-w-md">
+          <h1 className="text-4xl md:text-5xl font-semibold">
+            Login
+          </h1>
+          <h2 className="font-medium mt-2 text-gray-300">
+            Welcome back! Please enter your details.
+          </h2>
+
+          <LoginForm />
+
+          {/* Register link */}
+          <p className="mt-4 text-sm text-gray-400">
+            Don’t have an account?{" "}
+           <Link
+    to="/signup"
+    className="text-purple-400 hover:text-purple-500 font-semibold"
+  >
+    Signup
+  </Link>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
+  );
 }

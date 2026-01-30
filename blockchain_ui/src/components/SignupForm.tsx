@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 type SignupFormData = {
   username: string;
@@ -11,11 +11,14 @@ export default function SignupForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<SignupFormData>();
 
-  const password = watch("password");
+  const password = useWatch({
+    control,
+    name: "password",
+  });
 
   const onSubmit = (data: SignupFormData) => {
     console.log(data);
@@ -39,7 +42,7 @@ export default function SignupForm() {
           })}
         />
         {errors.username && (
-          <p className="text-red-400 text-sm">{String(errors.username.message)}</p>
+          <p className="text-red-400 text-sm">{errors.username.message}</p>
         )}
       </div>
 
@@ -58,7 +61,7 @@ export default function SignupForm() {
           })}
         />
         {errors.email && (
-          <p className="text-red-400 text-sm">{errors.email.message as string}</p>
+          <p className="text-red-400 text-sm">{errors.email.message}</p>
         )}
       </div>
 
@@ -73,14 +76,13 @@ export default function SignupForm() {
             minLength: { value: 8, message: "Min 8 characters" },
             maxLength: { value: 32, message: "Max 32 characters" },
             pattern: {
-              value:
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
               message: "Weak password",
             },
           })}
         />
         {errors.password && (
-          <p className="text-red-400 text-sm ">{errors.password.message as string}</p>
+          <p className="text-red-400 text-sm">{errors.password.message}</p>
         )}
       </div>
 
@@ -98,12 +100,12 @@ export default function SignupForm() {
         />
         {errors.confirmPassword && (
           <p className="text-red-400 text-sm">
-            {errors.confirmPassword.message as string}
+            {errors.confirmPassword.message}
           </p>
         )}
       </div>
 
-      <button className="w-full bg-purple-600 py-3 rounded-xl font-semibold hover:scale-95 transform transition-all duration-300 ease-in-out cursor-pointer">
+      <button className="w-full bg-purple-600 py-3 rounded-xl font-semibold hover:scale-95 transition-all duration-300">
         Create Account
       </button>
     </form>
