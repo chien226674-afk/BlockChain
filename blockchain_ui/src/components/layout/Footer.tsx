@@ -7,7 +7,8 @@ import { faYoutube, faTwitter, faDiscord, faInstagram } from "@fortawesome/free-
 
 function Footer() {
    return (
-    <footer className="bg-[#3B3B3B] text-white mt-20">
+    <footer className="bg-[#3B3B3B] text-white ">
+      <div className='h-px bg-[#2B2B2B] w-full'></div>
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
       
@@ -58,15 +59,11 @@ function Footer() {
                 placeholder="Enter your email here"
                 className="border-none rounded-none text-black"
               />
-              <Button className="rounded-none rounded-r-full bg-[#A259FF] hover:bg-[#8a4de8] px-8">
+              <Button className="rounded-none rounded-r-full cursor-pointer bg-[#A259FF] hover:bg-[#8a4de8] px-8">
                 Subscribe
               </Button>
             </div>
           </div>
-        </div>
-
-        <div className="border-t border-gray-600 mt-12 pt-6 text-sm text-gray-400">
-          © NFT Market. Use this template freely.
         </div>
       </div>
     </footer>

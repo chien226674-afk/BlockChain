@@ -15,7 +15,7 @@
   "bracketSameLine": false,
   "useTabs": false,
   "arrowParens": "always",
-  "singleQuote": false,
+  "singleQuote": true,
   "endOfLine": "auto",
 
   "importOrder": [

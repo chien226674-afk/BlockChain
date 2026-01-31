@@ -1,4 +1,4 @@
-import heroImg from "@/assets/heroanimationtransparentbck-2.gif"
+import heroImg from "@/assets/hero-animation.gif"
 export default function HeroSection() {
     return (
         <section className="bg-[#2B2B2B] text-white">
