@@ -8,6 +8,7 @@ import Rankings from "@/pages/Rankings"
 import ConnectWallet from "@/pages/ConnectWallet"
 import NFTDetailPage from "@/pages/NFTDetailPage"
 import Artist from "@/pages/Artist"
+import Marketplace from "@/pages/Marketplace"
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
         element:<Signup/>
       },
       {
-        path: "/rankings-desktop",
+        path: "/rankings",
         element:<Rankings/>
       },
       {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "/artist",
         element:<Artist/>
+      },
+      {
+        path: "/marketplace",
+        element:<Marketplace/>
       }
 
       ,

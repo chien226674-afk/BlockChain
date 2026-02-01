@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../ui/button";
+import { Link } from "react-router";
 
 function Header() {
   const [open, setOpen] = useState(false);
@@ -12,26 +13,36 @@ function Header() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* Logo */}
-        <div className="flex items-center text-white cursor-pointer">
+        <Link to="/">
+          <div className="flex items-center text-white cursor-pointer">
           <img src="/logo.png" className="w-10 h-10 object-contain" />
           <h1 className="font-mono font-medium ml-2 text-xl">
             NFT Marketplace
           </h1>
         </div>
+        </Link>
+      
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center gap-4 text-white">
-          <Button variant="ghost">Marketplace</Button>
-          <Button variant="ghost">Ranking</Button>
-          <Button variant="ghost">Connect a Wallet</Button>
+          <Link to="/marketplace"> <Button variant="ghost">Marketplace</Button></Link>
+          <Link to="/rankings"> <Button variant="ghost">Ranking</Button></Link>
+          <Link to="/connect-wallet"><Button variant="ghost">Connect a Wallet</Button></Link>
 
-          <Button
+
+          {/* <Button variant="ghost">Marketplace</Button>
+          <Button variant="ghost">Ranking</Button>
+          <Button variant="ghost">Connect a Wallet</Button> */}
+          <Link to="/signup"> 
+             <Button
             variant="primary"
             className="w-38.75 h-12 rounded-3xl text-[1rem] font-medium hover:scale-95 transition"
           >
             <FontAwesomeIcon icon={faUser} className="mr-2" />
             Sign Up
           </Button>
+          </Link>
+       
         </nav>
 
         {/* Mobile Toggle */}
