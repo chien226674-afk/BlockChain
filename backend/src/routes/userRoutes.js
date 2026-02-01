@@ -1,19 +1,21 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { 
-  register, 
-  login, 
-  getProfile, 
+import {
+  register,
+  login,
+  loginWithWallet,
+  getProfile,
   updateProfile,
-  getTopCreators 
-} = require('../controllers/userController');
-const { protect } = require('../middleware/auth');
+  getTopCreators
+} from '../controllers/userController.js';
+import { protect } from '../middleware/auth.js';
 
 // Routes
 router.post('/register', register);
 router.post('/login', login);
+router.post('/login-wallet', loginWithWallet);
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfile);
 router.get('/top-creators', getTopCreators);
 
-module.exports = router;
+export default router;

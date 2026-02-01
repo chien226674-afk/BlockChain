@@ -36,7 +36,8 @@ contract NFTMarketplace is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     mapping(address => uint256) private creatorEarnings;
     mapping(uint256 => uint256[]) private collectionItems;
 
-    uint256 public listingFee = 0.025 ether; // 2.5% phí listing
+    uint256 public listingFee = 0.025 ether; // Phí mint NFT (cố định)
+    uint256 public constant marketplaceFeePercent = 25; // 2.5% phí giao dịch (chia 1000)
 
     event MarketItemCreated(
         uint256 indexed itemId,
@@ -64,10 +65,11 @@ contract NFTMarketplace is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         string symbol
     );
 
-    constructor() ERC721("NFT Marketplace", "NFTM") {}
+    constructor() ERC721("NFT Marketplace", "NFTM") Ownable(msg.sender) {}
 
     // Mint NFT mới
-    function createToken(string memory tokenURI, uint256 collectionId) 
+    // Mint NFT mới
+    function createToken(string memory _tokenURI, uint256 collectionId) 
         public 
         payable 
         returns (uint256) 
@@ -78,7 +80,7 @@ contract NFTMarketplace is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         _currentTokenId++;
         
         _mint(msg.sender, newTokenId);
-        _setTokenURI(newTokenId, tokenURI);
+        _setTokenURI(newTokenId, _tokenURI);
         
         // Tạo market item
         _currentItemId++;
@@ -141,10 +143,11 @@ contract NFTMarketplace is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         _transfer(idToMarketItem[itemId].owner, msg.sender, tokenId);
         
         // Chuyển tiền
-        uint256 fee = (price * listingFee) / 100;
+        uint256 fee = (price * marketplaceFeePercent) / 1000; // 2.5% của giá bán
         uint256 sellerProceeds = price - fee;
         
-        payable(seller).transfer(sellerProceeds);
+        (bool success, ) = payable(seller).call{value: sellerProceeds}("");
+        require(success, "Transfer to seller failed");
         creatorEarnings[owner()] += fee; // Phí cho platform
 
         // Cập nhật item
@@ -247,10 +250,7 @@ contract NFTMarketplace is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     }
 
     // Override required functions
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-    }
-
+    // Override required functions
     function tokenURI(uint256 tokenId)
         public
         view
@@ -258,5 +258,14 @@ contract NFTMarketplace is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         returns (string memory)
     {
         return super.tokenURI(tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 }

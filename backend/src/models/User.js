@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    trim: true,
     lowercase: true
   },
   password: {
@@ -53,7 +54,7 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// FIXED: Hash password before saving - Sử dụng cách viết rõ ràng hơn
+// FIXED: Hash password before saving
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
 
@@ -62,8 +63,8 @@ userSchema.pre('save', async function () {
 });
 
 // Compare password method
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

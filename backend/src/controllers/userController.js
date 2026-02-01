@@ -1,5 +1,5 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
+import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -11,7 +11,7 @@ const generateToken = (id) => {
 // @desc    Register user
 // @route   POST /api/users/register
 // @access  Public
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const { username, email, password, walletAddress } = req.body;
 
@@ -47,7 +47,7 @@ exports.register = async (req, res) => {
 // @desc    Login user
 // @route   POST /api/users/login
 // @access  Public
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -79,10 +79,53 @@ exports.login = async (req, res) => {
   }
 };
 
+// @desc    Login with Wallet
+// @route   POST /api/users/login-wallet
+// @access  Public
+export const loginWithWallet = async (req, res) => {
+  try {
+    const { walletAddress } = req.body;
+
+    if (!walletAddress) {
+      return res.status(400).json({ message: 'Wallet address is required' });
+    }
+
+    let user = await User.findOne({ walletAddress });
+
+    if (!user) {
+      // Create new user if not exists
+      // Generate a temporary username based on wallet address if one isn't provided (or handle registration UI flow separately)
+      // For this step, we'll auto-register a basic user
+      user = await User.create({
+        username: `user_${walletAddress.substring(2, 8)}`,
+        email: `${walletAddress}@placeholder.com`, // Placeholder email, valid format
+        password: await bcrypt.hash(Math.random().toString(36), 10), // Random password
+        walletAddress,
+        role: 'user'
+      });
+    }
+
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      walletAddress: user.walletAddress,
+      role: user.role,
+      totalSales: user.totalSales,
+      totalVolume: user.totalVolume,
+      nftsSold: user.nftsSold,
+      token: generateToken(user._id)
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
-exports.getProfile = async (req, res) => {
+export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
@@ -97,7 +140,7 @@ exports.getProfile = async (req, res) => {
 // @desc    Get top creators
 // @route   GET /api/users/top-creators
 // @access  Public
-exports.getTopCreators = async (req, res) => {
+export const getTopCreators = async (req, res) => {
   try {
     const { timeframe = 'all' } = req.query;
     let sortCriteria = {};
@@ -133,10 +176,10 @@ exports.getTopCreators = async (req, res) => {
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-exports.updateProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -148,7 +191,7 @@ exports.updateProfile = async (req, res) => {
     user.profileImage = req.body.profileImage || user.profileImage;
 
     const updatedUser = await user.save();
-    
+
     res.json({
       _id: updatedUser._id,
       username: updatedUser.username,
