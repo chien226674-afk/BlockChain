@@ -4,9 +4,12 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../ui/button";
 import { Link } from "react-router";
+import { ConnectWalletButton } from "../ui/ConnectWalletButton";
+import { useWallet } from "../../context/WalletContext";
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const { isConnected } = useWallet();
 
   return (
     <header className="w-full bg-[#2B2B2B]">
@@ -15,34 +18,38 @@ function Header() {
         {/* Logo */}
         <Link to="/">
           <div className="flex items-center text-white cursor-pointer">
-          <img src="/logo.png" className="w-10 h-10 object-contain" />
-          <h1 className="font-mono font-medium ml-2 text-xl">
-            NFT Marketplace
-          </h1>
-        </div>
+            <img src="/logo.png" className="w-10 h-10 object-contain" />
+            <h1 className="font-mono font-medium ml-2 text-xl">
+              NFT Marketplace
+            </h1>
+          </div>
         </Link>
-      
+
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center gap-4 text-white">
           <Link to="/marketplace"> <Button variant="ghost">Marketplace</Button></Link>
           <Link to="/rankings"> <Button variant="ghost">Ranking</Button></Link>
-          <Link to="/connect-wallet"><Button variant="ghost">Connect a Wallet</Button></Link>
+          {isConnected && <Link to="/profile"> <Button variant="ghost">Profile</Button></Link>}
+          <Link to="/create"> <Button variant="ghost">Create</Button></Link>
+          <ConnectWalletButton />
 
 
           {/* <Button variant="ghost">Marketplace</Button>
           <Button variant="ghost">Ranking</Button>
           <Button variant="ghost">Connect a Wallet</Button> */}
-          <Link to="/signup"> 
-             <Button
-            variant="primary"
-            className="w-38.75 h-12 rounded-3xl text-[1rem] font-medium hover:scale-95 transition"
-          >
-            <FontAwesomeIcon icon={faUser} className="mr-2" />
-            Sign Up
-          </Button>
-          </Link>
-       
+          {!isConnected && (
+            <Link to="/signup">
+              <Button
+                variant="primary"
+                className="w-38.75 h-12 rounded-3xl text-[1rem] font-medium hover:scale-95 transition"
+              >
+                <FontAwesomeIcon icon={faUser} className="mr-2" />
+                Sign Up
+              </Button>
+            </Link>
+          )}
+
         </nav>
 
         {/* Mobile Toggle */}
@@ -63,19 +70,22 @@ function Header() {
           <Button variant="ghost" className="w-full justify-start">
             Ranking
           </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            Connect a Wallet
-          </Button>
-          <Button
-            variant="primary"
-            className="w-full rounded-2xl text-[1rem] font-medium"
-          >
-            <FontAwesomeIcon icon={faUser} className="mr-2" />
-            Sign Up
-          </Button>
+          <div className="w-full flex justify-start pl-4">
+            <ConnectWalletButton />
+          </div>
+          {!isConnected && (
+            <Button
+              variant="primary"
+              className="w-full rounded-2xl text-[1rem] font-medium"
+            >
+              <FontAwesomeIcon icon={faUser} className="mr-2" />
+              Sign Up
+            </Button>
+          )}
         </div>
-      )}
-    </header>
+      )
+      }
+    </header >
   );
 }
 
