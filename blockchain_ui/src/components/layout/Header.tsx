@@ -1,82 +1,71 @@
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "../ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { useWallet } from '../../context/WalletContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 
-function Header() {
+const Header = () => {
+  const { user, logout, isAuthenticated } = useAuth();
+  const { account } = useWallet();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-full bg-[#2B2B2B]">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <header className="py-4 px-6 md:px-12 bg-[#2B2B2B] flex items-center justify-between text-white border-b border-gray-700">
+      <Link to="/" className="flex items-center gap-2 text-2xl font-bold font-mono">
+        <span className="text-purple-500">NFT</span> Marketplace
+      </Link>
 
-        {/* Logo */}
-        <Link to="/">
-          <div className="flex items-center text-white cursor-pointer">
-          <img src="/logo.png" className="w-10 h-10 object-contain" />
-          <h1 className="font-mono font-medium ml-2 text-xl">
-            NFT Marketplace
-          </h1>
-        </div>
-        </Link>
-      
+      <nav className="hidden md:flex gap-8 items-center font-medium">
+        <Link to="/marketplace" className="hover:text-purple-400 transition">Marketplace</Link>
+        <Link to="/rankings" className="hover:text-purple-400 transition">Rankings</Link>
+        {/* <Link to="/artist" className="hover:text-purple-400 transition">Artists</Link> */}
 
-        {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center gap-4 text-white">
-          <Link to="/marketplace"> <Button variant="ghost">Marketplace</Button></Link>
-          <Link to="/rankings"> <Button variant="ghost">Ranking</Button></Link>
-          <Link to="/connect-wallet"><Button variant="ghost">Connect a Wallet</Button></Link>
+        {isAuthenticated ? (
+          <div className="flex items-center gap-4">
+            <Link to="/user/profile" className="flex items-center gap-2 hover:text-purple-400">
+              {user?.avatar ? (<img src={user.avatar} className="w-8 h-8 rounded-full" alt="avatar" />) : (<span className="bg-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-sm">{user?.username ? user.username[0] : 'U'}</span>)}
+              <span>{user?.username || 'User'}</span>
+            </Link>
+            <button onClick={() => { logout(); navigate('/login'); }} className="text-sm bg-red-500/20 text-red-400 px-3 py-1 rounded hover:bg-red-500/30">Logout</button>
+          </div>
+        ) : (
+          <Link to="/login" className="bg-purple-600 px-6 py-2 rounded-lg hover:bg-purple-700 transition">Login</Link>
+        )}
 
+        {account && (
+          <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-mono">
+            {account.slice(0, 6)}...{account.slice(-4)}
+          </div>
+        )}
+      </nav>
 
-          {/* <Button variant="ghost">Marketplace</Button>
-          <Button variant="ghost">Ranking</Button>
-          <Button variant="ghost">Connect a Wallet</Button> */}
-          <Link to="/signup"> 
-             <Button
-            variant="primary"
-            className="w-38.75 h-12 rounded-3xl text-[1rem] font-medium hover:scale-95 transition"
-          >
-            <FontAwesomeIcon icon={faUser} className="mr-2" />
-            Sign Up
-          </Button>
-          </Link>
-       
-        </nav>
+      {/* Mobile Toggle */}
+      <button
+        className="md:hidden text-white text-2xl"
+        onClick={() => setOpen(!open)}
+      >
+        <FontAwesomeIcon icon={open ? faXmark : faBars} />
+      </button>
 
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden text-white text-2xl"
-          onClick={() => setOpen(!open)}
-        >
-          <FontAwesomeIcon icon={open ? faXmark : faBars} />
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
+      {/* Mobile Menu (Simplified) */}
       {open && (
-        <div className="md:hidden bg-[#3B3B3B] px-6 py-6 space-y-4 text-white">
-          <Button variant="ghost" className="w-full justify-start">
-            Marketplace
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            Ranking
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            Connect a Wallet
-          </Button>
-          <Button
-            variant="primary"
-            className="w-full rounded-2xl text-[1rem] font-medium"
-          >
-            <FontAwesomeIcon icon={faUser} className="mr-2" />
-            Sign Up
-          </Button>
+        <div className="absolute top-16 left-0 w-full bg-[#3B3B3B] px-6 py-6 space-y-4 text-white z-50 shadow-lg">
+          <Link to="/marketplace" className="block w-full py-2 hover:bg-gray-700 rounded pl-2">Marketplace</Link>
+          <Link to="/rankings" className="block w-full py-2 hover:bg-gray-700 rounded pl-2">Rankings</Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/user/profile" className="block w-full py-2 hover:bg-gray-700 rounded pl-2">Profile</Link>
+              <button onClick={() => { logout(); navigate('/login'); }} className="block w-full text-left py-2 text-red-400 hover:bg-gray-700 rounded pl-2">Logout</button>
+            </>
+          ) : (
+            <Link to="/login" className="block w-full py-2 bg-purple-600 rounded text-center">Login</Link>
+          )}
         </div>
       )}
     </header>
   );
-}
+};
 
 export default Header;

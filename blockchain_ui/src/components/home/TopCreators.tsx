@@ -1,4 +1,4 @@
-import {faRocket} from "@fortawesome/free-solid-svg-icons";
+import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const creators = [
   { name: "Keepitreal", rank: 1 },
@@ -64,7 +64,7 @@ export default function TopCreators() {
               <p className="text-sm text-gray-400">
                 Total Sales:{" "}
                 <span className="text-white font-medium">
-                  34.53 ETH
+                  34.53 GO
                 </span>
               </p>
             </div>

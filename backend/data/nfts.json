@@ -1,0 +1,29 @@
+[
+  {
+    "id": "nft1",
+    "title": "Magic Mushroom 0325",
+    "creator": "Shroomie",
+    "image": "/assets/nft1.png",
+    "price": 1.63,
+    "highestBid": 0.33,
+    "description": "A wonderful magic mushroom from the forest."
+  },
+  {
+    "id": "nft2",
+    "title": "Happy Robot 032",
+    "creator": "BeKind2Robots",
+    "image": "/assets/nft2.png",
+    "price": 2.5,
+    "highestBid": 0.5,
+    "description": "A robot that is always happy."
+  },
+  {
+    "id": "nft3",
+    "title": "Happy Robot 024",
+    "creator": "BeKind2Robots",
+    "image": "/assets/nft3.png",
+    "price": 1.8,
+    "highestBid": 0.4,
+    "description": "Another happy robot."
+  }
+]

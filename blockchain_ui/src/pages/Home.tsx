@@ -5,14 +5,17 @@ import HowItWorks from "@/components/home/HowItWorks";
 import TopCreators from "@/components/home/TopCreators";
 import TrendingCollection from "@/components/home/TrendingColections";
 import WeeklyDigest from "@/components/home/WeeklyDigest";
+
 export default function Home() {
-  return <>
-  <HeroSection />
-  <TrendingCollection/>
-  <TopCreators/>
-  <DiscoverNFTs/>
-  <FeaturedNFT/>
-  <HowItWorks/>
-  <WeeklyDigest/>
-  </>
+  return (
+    <div className="bg-[#2B2B2B] text-white">
+      <HeroSection />
+      <TrendingCollection />
+      <TopCreators />
+      <DiscoverNFTs />
+      <FeaturedNFT />
+      <HowItWorks />
+      <WeeklyDigest />
+    </div>
+  );
 }

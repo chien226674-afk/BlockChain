@@ -1,4 +1,9 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import api from "@/services/api";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 type LoginFormData = {
   email: string;
@@ -11,9 +16,26 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log("Login data:", data);
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true);
+    try {
+      const { data: responseData } = await api.post("/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
+
+      toast.success("Welcome back!");
+      login(responseData.token, responseData.user);
+      navigate("/");
+    } catch (err: any) {
+      toast.error(err.message || "Login failed. Please check your credentials.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -22,8 +44,8 @@ export default function LoginForm() {
       <div>
         <input
           type="email"
-          placeholder="Email"
-          className="w-full rounded-xl px-4 py-3 text-black bg-slate-200"
+          placeholder="Email Address"
+          className="w-full rounded-xl px-4 py-3 text-black bg-slate-200 outline-none focus:ring-2 focus:ring-purple-500 transition-all"
           {...register("email", {
             required: "Email is required",
             pattern: {
@@ -33,7 +55,7 @@ export default function LoginForm() {
           })}
         />
         {errors.email && (
-          <p className="text-red-400 text-sm">{errors.email.message}</p>
+          <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
         )}
       </div>
 
@@ -42,13 +64,13 @@ export default function LoginForm() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full rounded-xl px-4 py-3 text-black bg-slate-200"
+          className="w-full rounded-xl px-4 py-3 text-black bg-slate-200 outline-none focus:ring-2 focus:ring-purple-500 transition-all"
           {...register("password", {
             required: "Password is required",
           })}
         />
         {errors.password && (
-          <p className="text-red-400 text-sm">{errors.password.message}</p>
+          <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
         )}
       </div>
 
@@ -62,8 +84,17 @@ export default function LoginForm() {
         </a>
       </div>
 
-      <button className="w-full bg-purple-600 py-3 rounded-xl font-semibold hover:scale-95 transition-all duration-300">
-        Login
+      <button
+        type="submit"
+        disabled={isLoading}
+        className={`w-full bg-purple-600 py-3 rounded-xl font-semibold hover:scale-[0.98] active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+      >
+        {isLoading ? (
+          <>
+            <i className="fa-solid fa-spinner animate-spin"></i>
+            Logging in...
+          </>
+        ) : 'Login'}
       </button>
     </form>
   );

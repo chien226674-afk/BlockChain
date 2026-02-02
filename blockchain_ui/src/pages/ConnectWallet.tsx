@@ -1,60 +1,91 @@
-import Metamark from "@/assets/Metamark.png";
-import { connectMetaMask } from '@/lib/metamask'
-import { useState } from 'react'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useWallet } from '../context/WalletContext';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+// import { Button } from '@/components/ui/button'; 
 
-export default function ConnectWallet() {
+const ConnectWallet = () => {
+  const { connectWallet, account, signer } = useWallet();
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  const [address, setAddress] = useState<string | null>(null)
+  useEffect(() => {
+    if (isAuthenticated && account) {
+      // navigate('/'); // Redirect if already fully authenticated
+    }
+  }, [isAuthenticated, account, navigate]);
 
   const handleConnect = async () => {
-    const wallet = await connectMetaMask()
-    if (wallet) {
-      setAddress(wallet)
+    await connectWallet();
+  };
+
+  const handleVerify = async () => {
+    if (!account || !signer) return;
+    try {
+      // 1. Get Nonce & Message
+      let nonceData;
+      if (isAuthenticated) {
+        // Use Link flow (get nonce for current logged in user)
+        const response = await api.get('/auth/nonce/me');
+        nonceData = response.data;
+      } else {
+        // Use Login flow (get nonce for specific wallet)
+        const response = await api.get(`/auth/nonce/${account}`);
+        nonceData = response.data;
+      }
+
+      const { nonce, message: backendMessage } = nonceData;
+      // Fallback if backendMessage is not provided
+      const message = backendMessage || `Please sign this message to verify your identity. Nonce: ${nonce}`;
+
+      // 2. Sign Message
+      const signature = await signer.signMessage(message);
+
+      // 3. Verify / Link on Backend
+      if (isAuthenticated) {
+        // Link Flow
+        const { data } = await api.post('/auth/link-wallet', { walletAddress: account, signature });
+        login(localStorage.getItem('token') || '', data.user);
+        alert("Wallet linked successfully to your account!");
+      } else {
+        // Login Flow
+        const { data } = await api.post('/auth/verify', { walletAddress: account, signature });
+        login(data.token, data.user);
+      }
+
+      navigate('/user/profile');
+    } catch (error: any) {
+      console.error("Verification failed", error);
+      alert(error.response?.data?.error || "Verification failed. Please check your wallet.");
     }
-  }
+  };
 
   return (
-    <div className="flex min-h-screen bg-[#2b2b2b] text-white">
+    <div className="container mx-auto max-w-md py-20 text-center">
+      <h1 className="text-3xl font-bold mb-6">Connect Your Wallet</h1>
+      <p className="text-gray-500 mb-8">Choose a wallet to connect to our marketplace.</p>
 
-      <div className="hidden lg:flex flex-1">
-        <img
-          src="Sign_Up.png"
-          alt="Connect Wallet"
-          className="w-full h-full object-cover"
-        />
-      </div>
-
-      <div className="flex flex-1  justify-start items-start px-6 mt-30">
-        <div className="w-full max-w-md">
-          <h1 className="text-4xl font-bold mb-4">Connect Wallet</h1>
-
-          <p className="text-gray-300 mb-8 leading-relaxed">
-            Choose a wallet you want to connect.
-            <br />
-            There are several wallet providers.
-          </p>
-
+      {!account ? (
+        <button
+          onClick={handleConnect}
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+        >
+          Connect MetaMask
+        </button>
+      ) : (
+        <div className="space-y-4">
+          <p className="font-mono bg-gray-100 p-2 rounded text-gray-800 break-all">{account}</p>
           <button
-      onClick={handleConnect}
-      className="
-        w-full flex items-center gap-4
-        border border-purple-500
-        rounded-xl px-6 py-4
-        hover:bg-purple-500/10
-        transition
-        cursor-pointer
-      "
-    >
-      <img src={Metamark} alt="Meta Mask" className="w-8 h-8" />
-
-      <span className="text-lg font-semibold">
-        {address
-          ? `${address.slice(0, 6)}...${address.slice(-4)}`
-          : 'MetaMask'}
-      </span>
-    </button>
+            onClick={handleVerify}
+            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
+          >
+            {isAuthenticated ? 'Verify & Link Wallet' : 'Verify Signature & Login'}
+          </button>
         </div>
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default ConnectWallet;

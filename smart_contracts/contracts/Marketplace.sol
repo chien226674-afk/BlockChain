@@ -1,0 +1,113 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
+contract Marketplace is ReentrancyGuard {
+    // Variables
+    uint256 public itemCount; 
+
+    struct Item {
+        uint256 itemId;
+        IERC721 nft;
+        uint256 tokenId;
+        uint256 price;
+        address payable seller;
+        bool sold;
+    }
+
+    // itemId -> Item
+    mapping(uint256 => Item) public items;
+
+    // Events
+    event Offered(
+        uint256 itemId,
+        address indexed nft,
+        uint256 tokenId,
+        uint256 price,
+        address indexed seller
+    );
+    event Bought(
+        uint256 itemId,
+        address indexed nft,
+        uint256 tokenId,
+        uint256 price,
+        address indexed seller,
+        address indexed buyer
+    );
+    event Canceled(uint256 itemId);    
+
+    constructor() {
+    }
+
+    // Functions
+    function makeItem(IERC721 _nft, uint256 _tokenId, uint256 _price) external nonReentrant {
+        require(_price > 0, "Price must be greater than zero");
+        
+        // Transfer nft from seller to this contract
+        _nft.transferFrom(msg.sender, address(this), _tokenId);
+
+        itemCount++;
+        items[itemCount] = Item(
+            itemCount,
+            _nft,
+            _tokenId,
+            _price,
+            payable(msg.sender),
+            false
+        );
+
+        emit Offered(
+            itemCount,
+            address(_nft),
+            _tokenId,
+            _price,
+            msg.sender
+        );
+    }
+
+    function purchaseItem(uint256 _itemId) external payable nonReentrant {
+        uint256 _totalPrice = getTotalPrice(_itemId);
+        Item storage item = items[_itemId];
+        
+        require(_itemId > 0 && _itemId <= itemCount, "Item doesn't exist");
+        require(msg.value >= _totalPrice, "not enough ether to cover item price");
+        require(!item.sold, "Item already sold");
+
+        // Pay seller
+        item.seller.transfer(item.price);
+        
+        item.sold = true;
+        
+        // Transfer NFT to buyer
+        item.nft.transferFrom(address(this), msg.sender, item.tokenId);
+        
+        emit Bought(
+            _itemId,
+            address(item.nft),
+            item.tokenId,
+            item.price,
+            item.seller,
+            msg.sender
+        );
+    }
+    
+    function cancelItem(uint256 _itemId) external nonReentrant {
+        Item storage item = items[_itemId];
+        require(msg.sender == item.seller, "Only seller can cancel");
+        require(!item.sold, "Item already sold");
+        
+        // Transfer NFT back to seller
+        item.nft.transferFrom(address(this), msg.sender, item.tokenId);
+        
+        // Mark as sold (effectively removed from market logic)
+        item.sold = true; 
+        
+        emit Canceled(_itemId);
+    }
+
+    function getTotalPrice(uint256 _itemId) view public returns(uint256){
+        return items[_itemId].price;
+    }
+}

@@ -1,148 +1,82 @@
-import { useState } from "react";
-import { Search } from "lucide-react"; // nếu không dùng lucide thì thay bằng svg thường
+import { useState, useEffect } from 'react';
+import type { MarketItem } from '../types';
+import api from '../services/api';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-const tabs = [
-  { key: "nfts", label: "NFTs", count: 302 },
-  { key: "collections", label: "Collections", count: 67 },
-]
+const Marketplace = () => {
+  const { user } = useAuth();
+  const [items, setItems] = useState<MarketItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
-const nfts = [
-  {
-    title: "Magic Mushroom 0325",
-    creator: "Shroomie",
-    image: "/assets/nft1.png",
-  },
-  {
-    title: "Happy Robot 032",
-    creator: "BeKind2Robots",
-    image: "/assets/nft2.png",
-  },
-  {
-    title: "Happy Robot 024",
-    creator: "BeKind2Robots",
-    image: "/assets/nft3.png",
-  },
-  // thêm data tuỳ bạn
-];
+  const fetchItems = async () => {
+    try {
+      const { data } = await api.get('/market/items');
+      // Filter out items where NFT data is missing or corrupted
+      const validItems = data.filter((item: any) => item.nft && item.nft.tokenId);
+      setItems(validItems);
+    } catch (error) {
+      console.error("Failed to fetch market items", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-export default function BrowseMarketplace() {
-  const [searchTerm, setSearchTerm] = useState("");
-const [activeTab, setActiveTab] = useState("nfts")
-
-  const filteredNFTs = nfts.filter(
-    (nft) =>
-      nft.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      nft.creator.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  if (loading) return <div className="text-center py-20 text-white">Loading...</div>;
 
   return (
-    <div className="bg-[#2B2B2B] text-white min-h-screen">
-      {/* ===== HEADER ===== */}
-      <div className="max-w-6xl mx-auto px-6 pt-20 pb-12">
-        <h1 className="text-4xl font-bold mb-3">Browse Marketplace</h1>
-        <p className="text-gray-400 mb-8">
-          Browse through more than 50k NFTs on the NFT Marketplace.
-        </p>
+    <div className="container mx-auto py-10 px-4 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-center sm:text-left text-white">Marketplace</h1>
 
-        {/* SEARCH */}
-        <div className="relative max-w-xl">
-          <input
-            type="text"
-            placeholder="Search your favourite NFTs"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[#3B3B3B] rounded-full py-3 pl-5 pr-12 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          <Search
-            size={18}
-            className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"
-          />
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="border-t border-gray-700">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`flex-1 py-6 text-center font-medium relative transition
-                  ${
-                    activeTab === tab.key
-                      ? "text-white"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-              >
-                {tab.label}
-                <span className="ml-2 bg-[#3B3B3B] px-2 py-0.5 rounded-full text-sm">
-                  {tab.count}
-                </span>
-
-                {activeTab === tab.key && (
-                  <span className="absolute bottom-0 left-0 w-full h-1 bg-gray-300" />
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-
-      {/* ===== NFT GRID ===== */}
-      <div className="bg-[#3B3B3B] py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          {filteredNFTs.length === 0 ? (
-            <p className="text-center text-gray-400">
-              No NFTs found 😢
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {filteredNFTs.map((nft) => (
-                <div
-                  key={nft.title}
-                  className="bg-[#2B2B2B] rounded-2xl overflow-hidden hover:scale-105 transition cursor-pointer"
-                >
-                  <img
-                    src={nft.image}
-                    alt={nft.title}
-                    className="w-full h-72 object-cover"
-                  />
-
-                  <div className="p-5">
-                    <h3 className="text-lg font-semibold mb-2">
-                      {nft.title}
-                    </h3>
-
-                    <div className="flex items-center gap-2 mb-4">
-                      <img
-                        src="/assets/avatar.png"
-                        className="w-6 h-6 rounded-full"
-                      />
-                      <span className="text-sm text-gray-300">
-                        {nft.creator}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between text-sm">
-                      <div>
-                        <p className="text-gray-400">Price</p>
-                        <p className="font-medium">1.63 ETH</p>
+      {items.length === 0 ? (
+        <p className="text-gray-500 text-center">No items listed for sale.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {items.map((item) => (
+            <div key={item.itemId} className="bg-[#2B2B2B] border border-gray-700 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition text-white">
+              <img
+                src={item.nft?.image}
+                alt={item.nft?.name}
+                className="w-full h-64 object-cover"
+                onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400?text=NFT+Image'; }}
+              />
+              <div className="p-4">
+                <h3 className="font-bold text-lg mb-1">{item.nft?.name}</h3>
+                <p className="text-sm text-gray-400 truncate mb-4">{item.nft?.description}</p>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-purple-400">{item.price} GO</span>
+                  <div className="flex gap-2">
+                    <Link
+                      to={`/nft-detail/${item.nft?.tokenId}`}
+                      className="bg-gray-700 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-gray-600 transition"
+                    >
+                      View
+                    </Link>
+                    {user?.walletAddress?.toLowerCase() === item.seller?.walletAddress?.toLowerCase() ? (
+                      <div className="bg-purple-900/50 text-purple-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-purple-700/50">
+                        Yours
                       </div>
-                      <div className="text-right">
-                        <p className="text-gray-400">Highest Bid</p>
-                        <p className="font-medium">0.33 wETH</p>
-                      </div>
-                    </div>
+                    ) : (
+                      <Link
+                        to={`/nft-detail/${item.nft?.tokenId}`}
+                        className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-blue-700 transition"
+                      >
+                        Buy
+                      </Link>
+                    )}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-          )}
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default Marketplace;

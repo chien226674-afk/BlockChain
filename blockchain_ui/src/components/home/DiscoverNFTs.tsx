@@ -1,4 +1,4 @@
-import {faEye} from "@fortawesome/free-solid-svg-icons";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const nfts = [
@@ -76,11 +76,11 @@ export default function DiscoverNFTs() {
                 <div className="flex justify-between text-sm">
                   <div>
                     <p className="text-gray-400">Price</p>
-                    <p className="font-medium">1.63 ETH</p>
+                    <p className="font-medium">1.63 GO</p>
                   </div>
                   <div className="text-right">
                     <p className="text-gray-400">Highest Bid</p>
-                    <p className="font-medium">0.33 wETH</p>
+                    <p className="font-medium">0.33 GO</p>
                   </div>
                 </div>
               </div>

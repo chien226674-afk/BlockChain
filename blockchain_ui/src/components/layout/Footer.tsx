@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,12 +5,12 @@ import { faYoutube, faTwitter, faDiscord, faInstagram } from "@fortawesome/free-
 
 
 function Footer() {
-   return (
+  return (
     <footer className="bg-[#3B3B3B] text-white ">
       <div className='h-px bg-[#2B2B2B] w-full'></div>
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-      
+
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <img src="/logo.png" className="w-10 h-10" />
