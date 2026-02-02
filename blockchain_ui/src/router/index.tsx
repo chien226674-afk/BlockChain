@@ -9,6 +9,8 @@ import ConnectWallet from "@/pages/ConnectWallet"
 import NFTDetailPage from "@/pages/NFTDetailPage"
 import Artist from "@/pages/Artist"
 import Marketplace from "@/pages/Marketplace"
+import CreateNFT from "@/pages/CreateNFT"
+import Profile from "@/pages/Profile"
 
 const router = createBrowserRouter([
   {
@@ -23,28 +25,36 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "/signup",  
-        element:<Signup/>
+        path: "/signup",
+        element: <Signup />
       },
       {
         path: "/rankings",
-        element:<Rankings/>
+        element: <Rankings />
       },
       {
         path: "/connect-wallet",
-        element:<ConnectWallet/>
+        element: <ConnectWallet />
       },
-       {
+      {
         path: "/nft-detail",
-        element:<NFTDetailPage/>
+        element: <NFTDetailPage />
       },
       {
         path: "/artist",
-        element:<Artist/>
+        element: <Artist />
       },
       {
         path: "/marketplace",
-        element:<Marketplace/>
+        element: <Marketplace />
+      },
+      {
+        path: "/create",
+        element: <CreateNFT />
+      },
+      {
+        path: "/profile",
+        element: <Profile />
       }
 
       ,
