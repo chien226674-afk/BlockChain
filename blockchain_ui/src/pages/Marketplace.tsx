@@ -51,7 +51,7 @@ const Marketplace = () => {
                   <span className="font-semibold text-purple-400">{item.price} GO</span>
                   <div className="flex gap-2">
                     <Link
-                      to={`/nft-detail/${item.nft?.tokenId}`}
+                      to={`/nft-detail/${item.nft?.contractAddress}/${item.nft?.tokenId}`}
                       className="bg-gray-700 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-gray-600 transition"
                     >
                       View
@@ -62,7 +62,7 @@ const Marketplace = () => {
                       </div>
                     ) : (
                       <Link
-                        to={`/nft-detail/${item.nft?.tokenId}`}
+                        to={`/nft-detail/${item.nft?.contractAddress}/${item.nft?.tokenId}`}
                         className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-blue-700 transition"
                       >
                         Buy

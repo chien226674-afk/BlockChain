@@ -1,0 +1,11 @@
+Total Item Count in Contract: 2
+--- Item 1 ---
+Token ID: 1
+Sold Status: true
+Price: 10.0 GO
+Seller: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+--- Item 2 ---
+Token ID: 2
+Sold Status: true
+Price: 1.0 GO
+Seller: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266

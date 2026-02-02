@@ -11,8 +11,8 @@ import { useAuth } from '../context/AuthContext';
 import MARKET_ABI from '../../../smart_contracts/artifacts/contracts/Marketplace.sol/Marketplace.json';
 
 const NFTDetailPage = () => {
-  const { id } = useParams();
-  const { user } = useAuth();
+  const { id, contractAddress } = useParams();
+  const { } = useAuth();
   const [nft, setNft] = useState<NFT | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
@@ -26,8 +26,8 @@ const NFTDetailPage = () => {
   const [listingStatus, setListingStatus] = useState('');
 
   useEffect(() => {
-    if (id) fetchNFT(id);
-  }, [id]);
+    if (id && contractAddress) fetchNFT(id, contractAddress);
+  }, [id, contractAddress]);
 
   useEffect(() => {
     if (signer && account) {
@@ -44,9 +44,9 @@ const NFTDetailPage = () => {
     }
   };
 
-  const fetchNFT = async (tokenId: string) => {
+  const fetchNFT = async (tokenId: string, contractAddr: string) => {
     try {
-      const { data } = await api.get(`/nfts/${tokenId}`);
+      const { data } = await api.get(`/nfts/${tokenId}/${contractAddr}`);
       setNft(data);
     } catch (error) {
       console.error("Failed to fetch NFT", error);
@@ -87,7 +87,8 @@ const NFTDetailPage = () => {
       // Sync with backend
       try {
         await api.post(`/nfts/${nft.tokenId}/buy`, {
-          buyerAddress: account
+          buyerAddress: account,
+          contractAddress: nft.contractAddress
         });
       } catch (syncError) {
         console.error("Backend sync failed", syncError);
@@ -95,7 +96,7 @@ const NFTDetailPage = () => {
       }
 
       alert("NFT Purchased Successfully!");
-      fetchNFT(nft.tokenId);
+      fetchNFT(nft.tokenId, nft.contractAddress);
       checkAllowanceAndBalance();
     } catch (error: any) {
       console.error("Buy failed", error);
@@ -147,14 +148,15 @@ const NFTDetailPage = () => {
       setListingStatus("Syncing with backend...");
       await api.patch(`/nfts/${nft.tokenId}`, {
         price: Number(listPrice),
-        itemId: itemId
+        itemId: itemId,
+        contractAddress: nft.contractAddress
       });
 
       alert("NFT Listed Successfully!");
       setIsListing(false);
       setListPrice('');
       setListingStatus('');
-      fetchNFT(nft.tokenId); // Refresh NFT data
+      fetchNFT(nft.tokenId, nft.contractAddress); // Refresh NFT data
     } catch (error: any) {
       console.error("Listing failed", error);
       alert("Listing failed: " + (error.reason || error.message));

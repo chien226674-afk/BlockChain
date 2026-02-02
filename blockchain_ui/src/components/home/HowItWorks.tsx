@@ -1,19 +1,23 @@
+import icon_1 from "@/assets/img_ui/icon-3@2x.svg"
+import icon_2 from "@/assets/img_ui/icon-4@2x.svg"
+import icon_3 from "@/assets/img_ui/icon-5@2x.svg"
+
 export default function HowItWorks() {
   const steps = [
     {
       title: "Setup Your Wallet",
       desc: "Set up your wallet of choice. Connect it to the marketplace by clicking the wallet icon in the top right corner.",
-      icon: "/assets/icons/wallet.png",
+      icon: icon_1,
     },
     {
       title: "Create Collection",
       desc: "Upload your work and setup your collection. Add a description, social links and floor price.",
-      icon: "/assets/icons/collection.png",
+      icon: icon_2,
     },
     {
       title: "Start Earning",
       desc: "Choose between auctions and fixed-price listings. Start earning by selling your NFTs.",
-      icon: "/assets/icons/earning.png",
+      icon: icon_3,
     },
   ];
 
@@ -35,15 +39,18 @@ export default function HowItWorks() {
               key={i}
               className="bg-[#3B3B3B] rounded-2xl p-8 text-center hover:scale-105 transition"
             >
-              <div className="flex justify-center mb-6">
-                <div className="w-24 h-24 rounded-full bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <img
-                    src={step.icon}
-                    alt={step.title}
-                    className="w-12 h-12 object-contain"
-                  />
+              <div className="flex justify-center mb-6 ">
+                <div className="w-32 h-32 ">
+                  <div className="w-full h-full rounded-full overflow-hidden  ">
+                    <img
+                      src={step.icon}
+                      alt={step.title}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                 </div>
               </div>
+
 
               <h3 className="text-white text-xl font-semibold mb-2">
                 {step.title}
@@ -54,7 +61,7 @@ export default function HowItWorks() {
             </div>
           ))}
         </div>
-      </div>
-    </section>
+      </div >
+    </section >
   );
 }

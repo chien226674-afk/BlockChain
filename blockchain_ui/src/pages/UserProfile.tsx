@@ -58,7 +58,8 @@ const UserProfile = () => {
             setListingStatus("Syncing with backend...");
             await api.patch(`/nfts/${nft.tokenId}`, {
                 price: Number(listPrice),
-                itemId: itemId
+                itemId: itemId,
+                contractAddress: nft.contractAddress
             });
 
             alert("NFT Listed Successfully!");
@@ -171,7 +172,7 @@ const UserProfile = () => {
                                     <div className="p-4">
                                         <h3 className="font-bold text-lg truncate">{nft.name}</h3>
                                         <div className="flex flex-col gap-2 mt-2">
-                                            <Link to={`/nft-detail/${nft.tokenId}`} className="text-purple-400 text-sm hover:underline">View Details</Link>
+                                            <Link to={`/nft-detail/${nft.contractAddress}/${nft.tokenId}`} className="text-purple-400 text-sm hover:underline">View Details</Link>
 
                                             {(!nft.itemId || nft.itemId === "null") ? (
                                                 <div className="mt-2">

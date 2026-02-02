@@ -1,18 +1,32 @@
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import creator_1 from "@/assets/img_ui/creator_1.png"
+import creator_2 from "@/assets/img_ui/creator_2.png"
+import creator_3 from "@/assets/img_ui/creator_3.png"
+import creator_4 from "@/assets/img_ui/creator_4.png"
+import creator_5 from "@/assets/img_ui/creator_5.png"
+import creator_6 from "@/assets/img_ui/creator_6.png"
+import creator_7 from "@/assets/img_ui/creator_7.png"
+import creator_8 from "@/assets/img_ui/creator_8.png"
+import creator_9 from "@/assets/img_ui/creator_9.png"
+import creator_10 from "@/assets/img_ui/creator_10.png"
+import creator_11 from "@/assets/img_ui/creator_11.png"
+import creator_12 from "@/assets/img_ui/creator_12.png"
+
 const creators = [
-  { name: "Keepitreal", rank: 1 },
-  { name: "Digilab", rank: 2 },
-  { name: "Gravityone", rank: 3 },
-  { name: "Juanie", rank: 4 },
-  { name: "Bluewhale", rank: 5 },
-  { name: "Mr Fox", rank: 6 },
-  { name: "Shroomie", rank: 7 },
-  { name: "Robotica", rank: 8 },
-  { name: "Rustyrobot", rank: 9 },
-  { name: "Animakid", rank: 10 },
-  { name: "Dotgu", rank: 11 },
-  { name: "Ghiblier", rank: 12 },
+  { name: "Keepitreal", rank: 1, avt: creator_1 },
+  { name: "Digilab", rank: 2, avt: creator_2 },
+  { name: "Gravityone", rank: 3, avt: creator_3 },
+  { name: "Juanie", rank: 4, avt: creator_4 },
+  { name: "Bluewhale", rank: 5, avt: creator_5 },
+  { name: "Mr Fox", rank: 6, avt: creator_6 },
+  { name: "Shroomie", rank: 7, avt: creator_7 },
+  { name: "Robotica", rank: 8, avt: creator_8 },
+  { name: "Rustyrobot", rank: 9, avt: creator_9 },
+  { name: "Animakid", rank: 10, avt: creator_10 },
+  { name: "Dotgu", rank: 11, avt: creator_11 },
+  { name: "Ghiblier", rank: 12, avt: creator_12 },
 ];
 
 export default function TopCreators() {
@@ -50,7 +64,7 @@ export default function TopCreators() {
 
               {/* Avatar */}
               <img
-                src={`/assets/creator-${creator.rank}.png`}
+                src={creator.avt}
                 alt={creator.name}
                 className="w-20 h-20 rounded-full object-cover mb-4"
               />

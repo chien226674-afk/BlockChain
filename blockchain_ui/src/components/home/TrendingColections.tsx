@@ -1,21 +1,37 @@
+import colecction1_1 from "@/assets/img_ui/1_1.png"
+import colecction1_2 from "@/assets/img_ui/1_2.png"
+import colecction1_3 from "@/assets/img_ui/1_3.png"
+import colecction2_1 from "@/assets/img_ui/2_1.png"
+import colecction2_2 from "@/assets/img_ui/2_2.png"
+import colecction2_3 from "@/assets/img_ui/2_3.png"
+import colecction3_1 from "@/assets/img_ui/3_1.png"
+import colecction3_2 from "@/assets/img_ui/3_2.png"
+import colecction3_3 from "@/assets/img_ui/3_3.png"
+import avt_1 from "@/assets/img_ui/avt_1.png"
+import avt_2 from "@/assets/img_ui/avt_2.png"
+import avt_3 from "@/assets/img_ui/avt_3.png"
+
 const collections = [
   {
     title: "Dsgn Animals",
     author: "MrFox",
-    mainImg: "/assets/dog.png",
-    thumbs: ["/assets/dog1.png", "/assets/dog2.png"],
+    mainImg: colecction1_1,
+    thumbs: [colecction1_2, colecction1_3],
+    avt: avt_1,
   },
   {
     title: "Magic Mushrooms",
     author: "Shroomie",
-    mainImg: "/assets/mushroom.png",
-    thumbs: ["/assets/mush1.png", "/assets/mush2.png"],
+    mainImg: colecction2_1,
+    thumbs: [colecction2_2, colecction2_3],
+    avt: avt_2,
   },
   {
     title: "Disco Machines",
     author: "BeKind2Robots",
-    mainImg: "/assets/robot.png",
-    thumbs: ["/assets/robot1.png", "/assets/robot2.png"],
+    mainImg: colecction3_1,
+    thumbs: [colecction3_2, colecction3_3],
+    avt: avt_3,
   },
 ];
 
@@ -65,7 +81,7 @@ export default function TrendingCollection() {
               {/* Author */}
               <div className="flex items-center gap-2 text-sm text-gray-300">
                 <img
-                  src="/assets/avatar.png"
+                  src={item.avt}
                   className="w-6 h-6 rounded-full"
                 />
                 {item.author}

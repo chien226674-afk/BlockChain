@@ -1,21 +1,31 @@
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import NFT_1 from "@/assets/img_ui/NFT_1.png"
+import NFT_2 from "@/assets/img_ui/NFT_2.png"
+import NFT_3 from "@/assets/img_ui/NFT_3.png"
+import NFT_avt_1 from "@/assets/img_ui/NFT_avt_1.png"
+import NFT_avt_2 from "@/assets/img_ui/NFT_avt_2.png"
+import NFT_avt_3 from "@/assets/img_ui/NFT_avt_3.png"
+
 const nfts = [
   {
     title: "Distant Galaxy",
     creator: "MoonDancer",
-    image: "/assets/nft-1.png",
+    image: NFT_1,
+    avt: NFT_avt_1,
   },
   {
     title: "Life On Edena",
     creator: "NebulaKid",
-    image: "/assets/nft-2.png",
+    image: NFT_2,
+    avt: NFT_avt_2,
   },
   {
     title: "Astrofiction",
     creator: "Spaceone",
-    image: "/assets/nft-3.png",
+    image: NFT_3,
+    avt: NFT_avt_3,
   },
 ];
 
@@ -63,7 +73,7 @@ export default function DiscoverNFTs() {
                 {/* Creator */}
                 <div className="flex items-center gap-2 mb-4">
                   <img
-                    src="/assets/avatar.png"
+                    src={nft.avt}
                     alt={nft.creator}
                     className="w-6 h-6 rounded-full"
                   />

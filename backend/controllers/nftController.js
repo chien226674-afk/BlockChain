@@ -151,8 +151,12 @@ export const getNFTById = async (req, res) => {
 
 export const updateNFT = async (req, res) => {
     try {
-        const { price, itemId, owner } = req.body;
-        const nft = await NFT.findOne({ tokenId: req.params.id });
+        const { price, itemId, owner, contractAddress } = req.body;
+        let query = { tokenId: req.params.id };
+        if (contractAddress) {
+            query.contractAddress = contractAddress.toLowerCase();
+        }
+        const nft = await NFT.findOne(query);
 
         if (!nft) {
             return res.status(404).json({ message: 'NFT not found' });
@@ -189,14 +193,18 @@ export const updateNFT = async (req, res) => {
 
 export const buyNFT = async (req, res) => {
     try {
-        const { buyerAddress } = req.body;
+        const { buyerAddress, contractAddress } = req.body;
         const { id } = req.params; // tokenId
 
         if (!buyerAddress) {
             return res.status(400).json({ message: 'Buyer address is required' });
         }
 
-        const nft = await NFT.findOne({ tokenId: id });
+        let query = { tokenId: id };
+        if (contractAddress) {
+            query.contractAddress = contractAddress.toLowerCase();
+        }
+        const nft = await NFT.findOne(query);
         if (!nft) {
             return res.status(404).json({ message: 'NFT not found' });
         }

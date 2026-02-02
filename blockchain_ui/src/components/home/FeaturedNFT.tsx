@@ -1,12 +1,15 @@
 import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import mushrooms from "@/assets/img_ui/2_1.png"
+import avatar from "@/assets/img_ui/mushroom_avt.png"
+
 export default function FeaturedNFT() {
   return (
     <section
       className="relative h-160 flex items-end"
       style={{
-        backgroundImage: "url('/assets/magic-mushroom.png')",
+        backgroundImage: "url(" + mushrooms + ")",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -16,13 +19,13 @@ export default function FeaturedNFT() {
 
       {/* Content */}
       <div className="relative w-full max-w-6xl mx-auto px-6 pb-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-10 text-white">
-        
+
         {/* Left */}
         <div>
           {/* Creator */}
           <div className="inline-flex items-center gap-2 bg-black/40 px-4 py-2 rounded-full mb-6">
             <img
-              src="/assets/avatar.png"
+              src={avatar}
               alt="Shroomie"
               className="w-6 h-6 rounded-full"
             />

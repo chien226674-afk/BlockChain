@@ -27,7 +27,7 @@ function App() {
             <Route path="/connect-wallet" element={<ConnectWallet />} />
             <Route path="/rankings" element={<Rankings />} />
             <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/nft-detail/:id" element={<NFTDetailPage />} />
+            <Route path="/nft-detail/:contractAddress/:id" element={<NFTDetailPage />} />
             <Route path="/artist/:address" element={<Artist />} />
             <Route path="/user/profile" element={<UserProfile />} />
             <Route path="/user/edit-profile" element={<EditProfile />} />

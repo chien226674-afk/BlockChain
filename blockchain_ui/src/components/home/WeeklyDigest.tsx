@@ -1,13 +1,14 @@
+import Join from "@/assets/img_ui/Join.png"
 export default function WeeklyDigest() {
   return (
     <section className="bg-[#2B2B2B] py-20">
       <div className="max-w-7xl mx-auto px-4">
         <div className="bg-[#3B3B3B] rounded-3xl p-8 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          
+
           {/* Image */}
           <div>
             <img
-              src="/assets/images/astronaut.png"
+              src={Join}
               alt="Weekly Digest"
               className="w-full rounded-2xl object-cover"
             />

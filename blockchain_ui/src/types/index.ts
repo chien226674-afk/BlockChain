@@ -20,6 +20,7 @@ export interface NFT {
     price?: number; // From market
     isListed?: boolean;
     itemId?: string; // itemId from contract
+    contractAddress: string;
 }
 
 export interface MarketItem {
